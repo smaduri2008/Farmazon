@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Farmazon</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link href="addProduct.css" rel="stylesheet" type="text/css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+</head>
+
+  
+<body>
+  <h1 class="title">Add Your Fresh Produce Here!</h1>
+  <div class="box1">
+  <form class="box">
+    <div class="mb-3">
+      <label for="product_title" class="form-label mini-label label">Product Title</label>
+      <input type="text" class="form-control mini-label" id="title-input" aria-describedby="titleHelp" placeholder="Title">
+    </div>
+    <div class="mb-3">
+      <label for="product_price" class="form-label mini-label label ">Product Price</label>
+      <input type="text" class="form-control mini-label" id="price-input" placeholder="Price">
+    </div>
+    <div class="mb-3">
+      <label for="address" class="form-label mini-label label">Product Address</label>
+      <input type="text" class="form-control mini-label" id="address-input" placeholder="Add a Location">
+    </div>
+    <div class="mb-3 upload">
+      <label for="formFile" class="form-label mini-label label2">Add an Image of Your Produce</label>
+      <input class="form-control mini-label" type="file" id="file-dialog" accept="image/*">
+    </div>
+    <button type="button" class="btn btn-dark" onclick="add_product()">Add Product</button>
+  </form>
+  </div>
+  <script>
+    let formCount = 0;
+
+    function addProductForm() {
+      formCount++;
+      const formContainer = document.getElementById('product-forms-container');
+      const formId = `product-form-${formCount}`;
+
+      const formHTML = `
+        <form class="box mb-4" id="${formId}">
+          <div class="mb-3">
+            <label for="title-input-${formCount}" class="form-label mini-label">Product Title</label>
+            <input type="text" class="form-control mini-label" id="title-input-${formCount}" placeholder="Title">
+          </div>
+          <div class="mb-3">
+            <label for="price-input-${formCount}" class="form-label mini-label">Product Price</label>
+            <input type="text" class="form-control mini-label" id="price-input-${formCount}" placeholder="Price">
+          </div>
+          <div class="mb-3">
+            <label for="address-input-${formCount}" class="form-label mini-label">Product Address</label>
+            <input type="text" class="form-control mini-label" id="address-input-${formCount}" placeholder="Add a Location">
+          </div>
+          <div class="mb-3 upload">
+            <label for="file-dialog-${formCount}" class="form-label mini-label">Add an Image of Your Produce</label>
+            <input class="form-control mini-label" type="file" id="file-dialog-${formCount}" accept="image/*">
+          </div>
+          <button type="button" class="btn btn-dark" onclick="add_product(${formCount})">Add Product</button>
+        </form>
+      `;
+
+      formContainer.insertAdjacentHTML('beforeend', formHTML);
+    }
+    async function add_product() {
+      const url = "https://9cc68b28-762d-4522-8b21-1a7b3fcaf000-00-39n1cr5mxxmya.riker.replit.dev/api/addProduce";
+      const title = document.getElementById("title-input").value;
+      const address = document.getElementById("address-input").value;
+      const price = document.getElementById("price-input").value;
+
+      const data = {
+        "title": title,
+        "address": address,
+        "price": price,
+      };
+
+      const formData = new FormData();
+      formData.append("data", 
+                      JSON.stringify(data));
+      const file = document.getElementById("file-dialog").files[0];
+      formData.append("image", file);
+
+      const xhr = new XMLHttpRequest();
+      
+      xhr.open("POST", url, true);
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          alert("Item successfully added to the market");
+        } else if (xhr.status === 400) {
+          alert("Some fields are missing");
+        } else {
+          alert("Authentication Error");
+        }
+      };
+      xhr.send(formData);
+    }
+  </script>
+
+  <style>
+    * {
+
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: linear-gradient(135deg, #f6f6f6, #AFE1AF);
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: right;
+
+    }
+
+    .title{
+        font-optical-sizing: auto;
+        font-weight: 800;
+        font-style: normal;
+        color: black;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+    }
+
+
+    .mini-label{
+        font-weight: 500;
+        padding-left: 10px;
+        align-items: center;
+    }
+    .label{
+        align-items: center;
+        padding-left: 52.5px;
+    }
+    .label2{
+        padding-left: 52.5px;
+    }
+
+    .box{
+        background-color: 	#AFE1AF;
+        color: Black;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        float: left;
+        left: 300px;
+        top: 30px;
+        border-style: solid;
+        border-color: #AFE1AF;
+        border-radius: 30px;
+        padding: 10px;
+        width: 50%;
+        padding-top: 30 px;
+    }
+
+    .box1{
+
+        padding-left:500px;
+        padding-top: 50px;
+    }
+  </style>
+  
+</body>
+</html>
